@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <form action="/generate-image" method="post">
+        <input type="text" name="prompt" id="prompt">
+    </form>
+    <div id="results"></div>
+    <script>
+        const form = document.querySelector('form');
+        const input = document.querySelector('#prompt');
+
+        form.addEventListener("submit", (e) => {
+            console.log('aaa')
+            e.preventDefault();
+            const data = { prompt: input.value }
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'Application/json'
+                },
+                body: JSON.stringify(data)
+            }
+            fetch('/generate-image', options).then((response)=>response.json()).then((data)=>{
+                console.log('data',data)
+                if (data.fileName) {
+                    const image = document.createElement('img');
+                    image.src = "/images/"+data.fileName;
+                    image.width = 200;
+                    image.height = 200;
+                    console.log('image',image)
+                    document.querySelector("#results").appendChild(image);
+                }
+            }).catch((error)=>{
+                console.log('error',error);
+            })
+        })
+
+    </script>
+</body>
+
+</html>
